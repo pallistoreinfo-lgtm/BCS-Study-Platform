@@ -3,10 +3,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -19,75 +15,78 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
-
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-
     if (error) {
       setError('ইমেইল বা পাসওয়ার্ড ভুল।')
       setLoading(false)
       return
     }
-
     router.push('/dashboard')
     router.refresh()
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-muted/30">
-      <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-2">
+    <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', background: '#f9fafb' }}>
+      <div style={{ width: '100%', maxWidth: '380px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', padding: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <div style={{ width: '40px', height: '40px', background: '#2563eb', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
               <path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM9 9h4v4H9z" fill="white"/>
             </svg>
           </div>
-          <CardTitle>স্বাগতম ফিরে</CardTitle>
-          <CardDescription>আপনার অ্যাকাউন্টে লগইন করুন</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="email">ইমেইল</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">পাসওয়ার্ড</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-            {error && (
-              <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
-                ⚠️ {error}
-              </p>
-            )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'লগইন হচ্ছে...' : 'লগইন করুন'}
-            </Button>
-          </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            অ্যাকাউন্ট নেই?{' '}
-            <Link href="/register" className="text-primary font-medium hover:underline">
-              রেজিস্ট্রেশন করুন
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+          <h1 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '4px' }}>স্বাগতম ফিরে</h1>
+          <p style={{ fontSize: '13px', color: '#6b7280' }}>আপনার অ্যাকাউন্টে লগইন করুন</p>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '12px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
+              ইমেইল
+            </label>
+            <input
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
+              পাসওয়ার্ড
+            </label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+          {error && (
+            <p style={{ fontSize: '13px', color: '#dc2626', background: '#fef2f2', padding: '8px 12px', borderRadius: '8px', marginBottom: '12px' }}>
+              ⚠️ {error}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ width: '100%', padding: '10px', background: loading ? '#93c5fd' : '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer' }}
+          >
+            {loading ? 'লগইন হচ্ছে...' : 'লগইন করুন'}
+          </button>
+        </form>
+
+        <p style={{ textAlign: 'center', fontSize: '13px', color: '#6b7280', marginTop: '16px' }}>
+          অ্যাকাউন্ট নেই?{' '}
+          <Link href="/register" style={{ color: '#2563eb', fontWeight: '500' }}>
+            রেজিস্ট্রেশন করুন
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }

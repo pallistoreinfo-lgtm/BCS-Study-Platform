@@ -3,10 +3,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -19,23 +15,17 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-
     if (password.length < 6) {
       setError('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে।')
       return
     }
-
     setLoading(true)
     const supabase = createClient()
-
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: { full_name: fullName },
-      },
+      options: { data: { full_name: fullName } },
     })
-
     if (error) {
       setError(error.message === 'User already registered'
         ? 'এই ইমেইলে আগেই অ্যাকাউন্ট আছে।'
@@ -43,77 +33,78 @@ export default function RegisterPage() {
       setLoading(false)
       return
     }
-
     router.push('/dashboard')
     router.refresh()
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-muted/30">
-      <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-2">
+    <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', background: '#f9fafb' }}>
+      <div style={{ width: '100%', maxWidth: '380px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', padding: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <div style={{ width: '40px', height: '40px', background: '#2563eb', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-              <path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM9 9h4v4H9z" fill="white"/>
+              <path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H9zM9 9h4v4H9z" fill="white"/>
             </svg>
           </div>
-          <CardTitle>নতুন অ্যাকাউন্ট</CardTitle>
-          <CardDescription>বিনামূল্যে শুরু করুন</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="full_name">পূর্ণ নাম</Label>
-              <Input
-                id="full_name"
-                placeholder="আপনার নাম লিখুন"
-                value={fullName}
-                onChange={e => setFullName(e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">ইমেইল</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">পাসওয়ার্ড</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="কমপক্ষে ৬ অক্ষর"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                className="mt-1"
-              />
-            </div>
-            {error && (
-              <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
-                ⚠️ {error}
-              </p>
-            )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'তৈরি হচ্ছে...' : 'অ্যাকাউন্ট তৈরি করুন'}
-            </Button>
-          </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            ইতোমধ্যে আছেন?{' '}
-            <Link href="/login" className="text-primary font-medium hover:underline">
-              লগইন করুন
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+          <h1 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '4px' }}>নতুন অ্যাকাউন্ট</h1>
+          <p style={{ fontSize: '13px', color: '#6b7280' }}>বিনামূল্যে শুরু করুন</p>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '12px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>পূর্ণ নাম</label>
+            <input
+              type="text"
+              placeholder="আপনার নাম লিখুন"
+              value={fullName}
+              onChange={e => setFullName(e.target.value)}
+              required
+              style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+          <div style={{ marginBottom: '12px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>ইমেইল</label>
+            <input
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>পাসওয়ার্ড</label>
+            <input
+              type="password"
+              placeholder="কমপক্ষে ৬ অক্ষর"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+          {error && (
+            <p style={{ fontSize: '13px', color: '#dc2626', background: '#fef2f2', padding: '8px 12px', borderRadius: '8px', marginBottom: '12px' }}>
+              ⚠️ {error}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ width: '100%', padding: '10px', background: loading ? '#93c5fd' : '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer' }}
+          >
+            {loading ? 'তৈরি হচ্ছে...' : 'অ্যাকাউন্ট তৈরি করুন'}
+          </button>
+        </form>
+
+        <p style={{ textAlign: 'center', fontSize: '13px', color: '#6b7280', marginTop: '16px' }}>
+          ইতোমধ্যে আছেন?{' '}
+          <Link href="/login" style={{ color: '#2563eb', fontWeight: '500' }}>
+            লগইন করুন
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }
